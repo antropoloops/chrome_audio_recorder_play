@@ -1,0 +1,43 @@
+=== PROPÓSITO ÚNICO (Single purpose) ===
+
+La extensión graba fragmentos cortos de audio (hasta 2 minutos) de la pestaña activa de Chrome, para uso educativo y de investigación personal, guardando el título de la página y la URL de origen dentro del propio archivo de audio.
+
+=== DESCRIPCIÓN DETALLADA ===
+
+Tab Audio Recorder graba fragmentos cortos de audio (hasta 2 minutos) de la pestaña que tengas abierta en Chrome, pensado para uso educativo y de investigación personal.
+
+Cómo funciona:
+- Abre la pestaña (por ejemplo, un vídeo de YouTube o una canción en Spotify) y pulsa el icono de la extensión para empezar a grabar.
+- El audio de la pestaña se sigue reproduciendo con normalidad mientras se graba.
+- Al detener la grabación, el archivo WebM se guarda en la carpeta de Descargas, con el título de la página, la URL de origen y la fecha guardados dentro del propio archivo (como metadatos), sin necesidad de archivos adicionales.
+- Las grabaciones se limitan a 2 minutos para mantener el uso dentro de fragmentos cortos.
+
+Esta extensión no recopila, almacena ni transmite ningún dato a servidores externos. No incluye analítica ni código remoto. Todo el procesamiento ocurre localmente en el navegador.
+
+Uso educativo y de investigación personal. Respeta los derechos de autor y los términos de servicio de las páginas que grabes.
+
+=== JUSTIFICACIÓN DE PERMISOS ===
+
+tabCapture:
+Se usa para capturar el audio de la pestaña que el usuario elige grabar de forma explícita, al pulsar el icono de la extensión. Es la función principal de la extensión.
+
+offscreen:
+La grabación con MediaRecorder no puede ejecutarse en el service worker de Manifest V3, así que se usa un documento offscreen oculto para grabar y reproducir el audio capturado, sin abrir ninguna ventana visible.
+
+downloads:
+Se usa para guardar el archivo de audio grabado en la carpeta de Descargas del usuario, dentro de una subcarpeta "TabRecordings".
+
+activeTab:
+Se usa para leer el título y la URL de la pestaña activa en el momento en que el usuario pulsa "Empezar grabación", sin mostrar ninguna advertencia de permisos adicional. No se accede a ninguna otra pestaña.
+
+storage:
+Se usa únicamente para recordar, mientras una grabación está en curso, su estado (pestaña, título, hora de inicio), de modo que si el usuario cierra y reabre el popup, este siga mostrando el cronómetro y el botón de detener correctamente. No se guarda ningún dato de forma persistente ni se transmite a ningún servidor.
+
+=== FORMULARIO DE PRÁCTICAS DE PRIVACIDAD (Privacy practices) ===
+
+¿Recopila datos del usuario? No.
+¿Vende o transfiere datos a terceros? No.
+¿Usa los datos para fines distintos a los declarados? No aplica (no se recopilan datos).
+¿Usa los datos para determinar la solvencia o para préstamos? No.
+
+Justificación de uso de cada permiso: ver sección anterior.
