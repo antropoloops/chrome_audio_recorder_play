@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tab Audio Recorder — Política de privacidad</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f6f5f2;
+    --surface: #ffffff;
+    --text: #1c1d1f;
+    --text-muted: #5b5e63;
+    --accent: #3651d4;
+    --border: #e4e2dd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16171a;
+      --surface: #1e2024;
+      --text: #eceef0;
+      --text-muted: #9a9ea5;
+      --accent: #8ab4f8;
+      --border: #2c2e33;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 48px 20px;
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.65;
+  }
+  main {
+    max-width: 680px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 40px clamp(20px, 5vw, 56px);
+  }
+  h1 {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    margin: 0 0 4px;
+  }
+  .updated {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin: 0 0 32px;
+  }
+  h2 {
+    font-size: 1.1rem;
+    margin: 28px 0 10px;
+    color: var(--accent);
+  }
+  p, li { font-size: 0.98rem; max-width: 62ch; }
+  ul { padding-left: 1.3em; margin: 8px 0; }
+  li { margin-bottom: 6px; }
+  footer {
+    margin-top: 36px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Tab Audio Recorder — Política de privacidad</h1>
+  <p class="updated">Última actualización: 17 de septiembre de 2026</p>
+
+  <p>
+    Tab Audio Recorder es una extensión de Chrome de distribución no listada,
+    pensada para uso educativo y de investigación personal. Esta página
+    describe qué datos trata la extensión.
+  </p>
+
+  <h2>Qué no recopila esta extensión</h2>
+  <ul>
+    <li>No recopila, almacena ni transmite datos personales a ningún servidor.</li>
+    <li>No incluye analítica, seguimiento ni publicidad.</li>
+    <li>No se conecta a internet ni carga código remoto: todo el código se ejecuta localmente, incluida la librería de terceros que usa (Mediabunny, con licencia MPL-2.0), que se distribuye dentro de la propia extensión.</li>
+  </ul>
+
+  <h2>Qué hace la extensión</h2>
+  <ul>
+    <li>Graba el audio de la pestaña que el usuario elige grabar, de forma explícita, al pulsar el icono de la extensión.</li>
+    <li>Guarda el título de la página, la URL de origen y la fecha de grabación dentro del propio archivo de audio (formato WebM), como metadatos, para que el usuario pueda identificar el origen de cada grabación.</li>
+    <li>El archivo se guarda directamente en la carpeta de Descargas del propio ordenador del usuario. Ningún dato sale del dispositivo del usuario.</li>
+    <li>El estado de una grabación en curso (por ejemplo, para mostrar el cronómetro en el popup) se guarda temporalmente con el almacenamiento local de la extensión y se borra automáticamente al finalizar la grabación.</li>
+    <li>Las grabaciones se limitan a 2 minutos de duración.</li>
+  </ul>
+
+  <h2>Uso previsto</h2>
+  <p>
+    Esta herramienta está pensada para uso educativo y de investigación
+    personal. La persona que la usa es responsable de respetar los derechos
+    de autor y los términos de servicio de las páginas que decida grabar.
+  </p>
+
+  <h2>Cambios a esta política</h2>
+  <p>
+    Si el funcionamiento de la extensión cambia de forma que afecte a esta
+    política, esta página se actualizará y se indicará la nueva fecha arriba.
+  </p>
+
+  <footer>
+    Contacto: <a href="mailto:info@antropoloops.com">info@antropoloops.com</a>
+  </footer>
+</main>
+</body>
+</html>
