@@ -1,4 +1,4 @@
-import { cleanTitle, buildFilename } from "./util.js";
+import { cleanTitle, buildFilename, DOWNLOAD_FOLDER } from "./util.js";
 import {
   Input,
   Output,
@@ -6,6 +6,7 @@ import {
   BlobSource,
   BufferTarget,
   MkvOutputFormat,
+  WebMOutputFormat,
   WEBM,
 } from "./lib/mediabunny.min.mjs";
 
@@ -91,7 +92,7 @@ async function saveRecording(stream) {
   const rawBlob = new Blob(chunks, { type: "audio/webm" });
   const { title, url, startTime } = currentMeta;
   const cleaned = cleanTitle(title, url);
-  const filename = "TabRecordings/" + buildFilename(new Date(startTime), cleaned);
+  const filename = `${DOWNLOAD_FOLDER}/` + buildFilename(new Date(startTime), cleaned);
 
   let blobToSave = rawBlob;
   try {
@@ -114,7 +115,7 @@ async function tagRecording(rawBlob, { title, url, startTime }) {
     source: new BlobSource(rawBlob),
   });
   const target = new BufferTarget();
-  const output = new Output({ format: new MkvOutputFormat(), target });
+  const output = new Output({ format: new WebMOutputFormat(), target });
 
   const conversion = await Conversion.init({
     input,

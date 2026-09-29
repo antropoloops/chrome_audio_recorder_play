@@ -72,8 +72,16 @@ function waitForDownloadToFinish(downloadId) {
 }
 
 async function handleDownload({ blobUrl, filename }) {
-  const downloadId = await chrome.downloads.download({ url: blobUrl, filename, saveAs: false });
-
+  let downloadId;
+  try {
+    downloadId = await chrome.downloads.download({ url: blobUrl, filename, saveAs: false });
+  } catch (err) {
+    // e.g. rejected filename/path — clear the UI state instead of getting
+    // stuck with the REC badge and a dangling offscreen document.
+    console.error("Download failed:", err, "filename:", filename);
+    await resetState();
+    return;
+  }
   // Update the UI right away, but keep the offscreen document (and the blob
   // URL it owns) alive until Chrome has actually finished reading the file —
   // closing it too early breaks the download mid-read.
