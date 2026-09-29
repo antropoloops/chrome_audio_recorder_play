@@ -20,8 +20,10 @@
 //   readWebmMetadata(arrayBufferOrUint8Array) → { docType, title, tags } | null
 //
 // Robustness: refuses anything that doesn't look like a MediaRecorder-style
-// WebM (unknown-size elements in the metadata region, truncated boundaries,
-// or seek-structures like Cues/SeekHead whose byte offsets would go stale).
+// WebM (unknown-size elements in the metadata region, or truncated boundaries).
+// Seek structures (SeekHead/Cues) are OPTIONAL in WebM and their stored byte
+// offsets would go stale after splicing, so the writer DROPS them and emits a
+// minimal, index-free file — the same shape MediaRecorder streams before Stop.
 // Callers are expected to keep the untagged recording if this throws.
 
 // Element IDs as byte arrays (byte-wise comparison avoids marker ambiguity).
@@ -37,7 +39,7 @@ const ID_SIMPLETAG = [0x67, 0xc8];
 const ID_TAGNAME = [0x45, 0xa3];
 const ID_TAGSTRING = [0x44, 0x87];
 const ID_CLUSTER = [0x1f, 0x43, 0xb6, 0x75];
-const ID_SEEKHEAD = [0x11, 0x4d, 0x9b, 0x67];
+const ID_SEEKHEAD = [0x11, 0x4d, 0x9b, 0x74];
 const ID_CUES = [0x1c, 0x53, 0xbb, 0x6b];
 // Inside Targets, a UID element scopes the Tag to a track/edition/etc.
 // Global ("whole file") tags carry none of these.
@@ -97,12 +99,12 @@ function vintSize(value, fixedWidth = 0) {
 }
 
 function el(id, payload) {
-  return concat([Uint8Array.from(id), vintSize(payload.length), payload]);
+  return concatParts([Uint8Array.from(id), vintSize(payload.length), payload]);
 }
 
 // Element with a forced size-VINT width.
 function elw(id, payload, width) {
-  return concat([Uint8Array.from(id), vintSize(payload.length, width), payload]);
+  return concatParts([Uint8Array.from(id), vintSize(payload.length, width), payload]);
 }
 
 // Copy bytes [a, b) while dropping the given sorted, non-overlapping [s,e) ranges.
@@ -183,16 +185,16 @@ function decodeUtf8(bytes, from, to) {
 // Container size VINTs are fixed 4-byte; leaf strings use minimal VINTs.
 function buildTagsElement(pairs) {
   const simpleTags = pairs.map(([name, value]) =>
-    elw(ID_SIMPLETAG, concat([
+    elw(ID_SIMPLETAG, concatParts([
       el(ID_TAGNAME, enc.encode(name)),
       el(ID_TAGSTRING, enc.encode(value)),
     ]), 4)
   );
-  const targets = elw(ID_TARGETS, concat([
+  const targets = elw(ID_TARGETS, concatParts([
     elw([0x68, 0xca], Uint8Array.of(50), 1),
     elw([0x63, 0xca], enc.encode("MOVIE"), 1),
   ]), 4);
-  return elw(ID_TAGS, elw(ID_TAGSMODERN, concat([targets, ...simpleTags]), 4), 4);
+  return elw(ID_TAGS, elw(ID_TAGSMODERN, concatParts([targets, ...simpleTags]), 4), 4);
 }
 
 // ---------------------------------------------------------------------------
@@ -338,6 +340,15 @@ export async function embedWebmMetadata(source, { title, url, dateRecorded, extr
       sawCluster = true;
       continue; // walk on: Cues often live AFTER the clusters
     }
+    // Seek structures (SeekHead/Cues) are optional in WebM. Splicing bytes
+    // would leave their stored offsets stale, so DROP them entirely and emit
+    // a minimal, index-free file — the shape MediaRecorder streams before
+    // Stop. An unknown-size one can't be bounded safely: refuse loudly.
+    if (idMatches(bytes, child.hdrStart, ID_SEEKHEAD) || idMatches(bytes, child.hdrStart, ID_CUES)) {
+      if (!child.known) throw new Error("Unknown-size SeekHead/Cues cannot be dropped safely.");
+      skipRanges.push([child.hdrStart, child.payloadEnd]);
+      continue;
+    }
     if (!sawCluster) {
       // Metadata region, before the first Cluster — the layout matters here.
       if (!child.known) throw new Error("Unknown-size element before first Cluster.");
@@ -354,11 +365,8 @@ export async function embedWebmMetadata(source, { title, url, dateRecorded, extr
         skipRanges.push([child.hdrStart, child.payloadEnd]);
       }
     }
-    // Seek structures anywhere in the Segment would go stale after splicing.
-    if (idMatches(bytes, child.hdrStart, ID_SEEKHEAD) || idMatches(bytes, child.hdrStart, ID_CUES)) {
-      throw new Error("File contains SeekHead/Cues; byte-splicing would invalidate their offsets.");
-    }
   }
+  skipRanges.sort((a, b) => a[0] - b[0]);
   const removed = [...skipRanges, ...infoTitleSkips].reduce((n, [s, e]) => n + (e - s), 0);
 
   const pairs = [];

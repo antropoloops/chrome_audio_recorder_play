@@ -6,6 +6,12 @@ This extension records audio as a standard WebM (Matroska) file. Metadata about 
 Tags are `SimpleTag` elements written directly by the extension's own
 byte-level serializer ([`webm-tags.js`](webm-tags.js), no external library)
 right after recording stops, spliced into the WebM without touching the audio.
+
+The splice also drops the optional `SeekHead` / `Cues` seek index, because
+inserting bytes would leave their stored offsets stale. Both elements are
+optional in WebM (MediaRecorder's own live output has neither), so the result
+is still a fully valid, playable WebM — just with a minimal, index-free layout.
+For these short clips the only effect is that seeking is marginally slower.
 The title is stored both as the Matroska `Info > Title` element and as the
 `TITLE` tag; targets carry the type string `MOVIE`, so some readers (e.g.
 `ffprobe`) display these tags with a `MOVIE/` prefix.
