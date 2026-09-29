@@ -1,3 +1,5 @@
+// Central definition: every recording is downloaded under this folder.
+export const DOWNLOAD_FOLDER = "_GrabacionesPlay";
 const MEDIA_EXTENSIONS = /\.(mov|mp4|m4v|avi|mkv|wmv|flv|wav|mp3|webm|flac|m4a|ogg)$/i;
 
 export function cleanTitle(title, url) {

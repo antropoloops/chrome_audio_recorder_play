@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Tab Audio Recorder",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Graba fragmentos cortos de audio de una pestaña con fines educativos y de investigación personal.",
   "icons": {
     "16": "icons/icon16.png",
