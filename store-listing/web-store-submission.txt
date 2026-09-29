@@ -24,8 +24,7 @@ Se usa para capturar el audio de la pestaña que el usuario elige grabar de form
 offscreen:
 La grabación con MediaRecorder no puede ejecutarse en el service worker de Manifest V3, así que se usa un documento offscreen oculto para grabar y reproducir el audio capturado, sin abrir ninguna ventana visible.
 
-downloads:
-Se usa para guardar el archivo de audio grabado en la carpeta de Descargas del usuario, dentro de una subcarpeta "TabRecordings".
+Se usa para guardar el archivo de audio grabado en la carpeta de Descargas del usuario, dentro de una subcarpeta "_GrabacionesPlay".
 
 activeTab:
 Se usa para leer el título y la URL de la pestaña activa en el momento en que el usuario pulsa "Empezar grabación", sin mostrar ninguna advertencia de permisos adicional. No se accede a ninguna otra pestaña.

@@ -1,14 +1,5 @@
 import { cleanTitle, buildFilename, DOWNLOAD_FOLDER } from "./util.js";
-import {
-  Input,
-  Output,
-  Conversion,
-  BlobSource,
-  BufferTarget,
-  MkvOutputFormat,
-  WebMOutputFormat,
-  WEBM,
-} from "./lib/mediabunny.min.mjs";
+import { embedWebmMetadata } from "./webm-tags.js";
 
 const RECORDING_LIMIT_MS = 2 * 60 * 1000; // this extension is for short fragments, not long recordings
 
@@ -110,25 +101,12 @@ async function saveRecording(stream) {
 }
 
 async function tagRecording(rawBlob, { title, url, startTime }) {
-  const input = new Input({
-    formats: [WEBM],
-    source: new BlobSource(rawBlob),
+  // Byte-level splice: title inside Info (spec), URL and DATE_RECORDED as
+  // SimpleTags in the 0x7373 tags block before the first Cluster. The audio
+  // bytes are copied verbatim; throws on unwritable files.
+  return embedWebmMetadata(rawBlob, {
+    title,
+    url,
+    dateRecorded: new Date(startTime).toISOString().slice(0, 10),
   });
-  const target = new BufferTarget();
-  const output = new Output({ format: new WebMOutputFormat(), target });
-
-  const conversion = await Conversion.init({
-    input,
-    output,
-    tags: {
-      title,
-      raw: {
-        URL: url,
-        DATE_RECORDED: new Date(startTime).toISOString().slice(0, 10),
-      },
-    },
-  });
-  await conversion.execute();
-
-  return new Blob([target.buffer], { type: "audio/webm" });
 }

@@ -8,8 +8,7 @@ Each recording keeps its source title and page URL **inside the WebM file itself
 
 1. Open the tab you want to record, start playback, and click the extension icon.
 2. Click **Empezar grabación**. The tab keeps playing sound normally while it's being captured.
-3. Click **Detener grabación** (or wait for the 2-minute limit) to stop.
-4. The file is saved to `Downloads/TabRecordings/` as a `.webm` file named `YYYY-MM-DD <title>.webm`.
+4. The file is saved to `Downloads/_GrabacionesPlay/` as a `.webm` file named `YYYY-MM-DD <title>.webm`.
 
 The saved file carries these metadata tags, readable with tools like `ffprobe` or VLC:
 
@@ -42,11 +41,14 @@ No host permissions, no remote code, no analytics, and no network access of any 
 ## Privacy
 
 This extension does not collect, store, or transmit any user data. All processing happens locally in the browser; the recorded file goes straight to the user's own Downloads folder. See the full privacy policy linked from the Chrome Web Store listing.
+## Tagging
 
-## Third-party code
-
-Tag writing uses [Mediabunny](https://mediabunny.dev/) (MPL-2.0), bundled locally in [`lib/`](lib/) — see [`lib/LICENSE-mediabunny.txt`](lib/LICENSE-mediabunny.txt).
-
+Tag writing is done by this repo's own module, [`webm-tags.js`](webm-tags.js) —
+a zero-dependency WebM/EBML byte-level serializer. It splices the metadata
+into the recording without touching the audio bytes, and mirrors the byte
+layout real demuxers read (title inside the Matroska `Info` element, and the
+`TITLE`/`URL`/`DATE_RECORDED` tags in the standard tags block, where
+`ffprobe` shows them as `MOVIE/…`).
 ## Disclaimer
 
 This tool is for educational and personal research use. Recording audio may be restricted by a site's terms of service or by local law — it's the user's responsibility to respect those when choosing what to record.

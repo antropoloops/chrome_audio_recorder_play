@@ -3,8 +3,12 @@
 This extension records audio as a standard WebM (Matroska) file. Metadata about the recording's source is stored inside the file itself, as file-level Matroska tags — no separate sidecar file.
 
 ## Format
-
-Tags are `SimpleTag` elements at target level 50 ("whole file", not per-track), written via the [Mediabunny](https://mediabunny.dev/) library during a remux step right after recording stops.
+Tags are `SimpleTag` elements written directly by the extension's own
+byte-level serializer ([`webm-tags.js`](webm-tags.js), no external library)
+right after recording stops, spliced into the WebM without touching the audio.
+The title is stored both as the Matroska `Info > Title` element and as the
+`TITLE` tag; targets carry the type string `MOVIE`, so some readers (e.g.
+`ffprobe`) display these tags with a `MOVIE/` prefix.
 
 ## Tags and values
 
