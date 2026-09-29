@@ -12,6 +12,7 @@ inserting bytes would leave their stored offsets stale. Both elements are
 optional in WebM (MediaRecorder's own live output has neither), so the result
 is still a fully valid, playable WebM — just with a minimal, index-free layout.
 For these short clips the only effect is that seeking is marginally slower.
+
 The title is stored both as the Matroska `Info > Title` element and as the
 `TITLE` tag; targets carry the type string `MOVIE`, so some readers (e.g.
 `ffprobe`) display these tags with a `MOVIE/` prefix.
