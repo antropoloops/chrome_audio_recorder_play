@@ -27,15 +27,19 @@ The title is stored both as the Matroska `Info > Title` element and as the
 
 ## How to read them
 
-Use `music-metadata`'s `parseBlob()` on the uploaded file, then search `metadata.native` (flattened across all its format keys, since the exact native key name isn't guaranteed stable across library versions) for a tag whose `id` matches `URL` / `DATE_RECORDED` case-insensitively. Don't assume a fixed native key path.
+Each `.webm` may carry three Matroska tags: `TITLE`, `URL`, `DATE_RECORDED`. Read them with `music-metadata` and look them up in the **native** tag bag, matching the tag id case-insensitively — don't assume a fixed key path. Any of them may be absent (an untagged recording is legitimate), so render "no source info available" instead of assuming they exist.
 
 ```js
 import { parseBlob } from "music-metadata";
 
-const metadata = await parseBlob(file);
-const allTags = Object.values(metadata.native).flat();
-const urlTag = allTags.find((tag) => /^url$/i.test(tag.id));
-const url = urlTag?.value;
+const meta = await parseBlob(file);
+const tags = Object.values(meta.native ?? {}).flat();
+const get = (name) =>
+  tags.find((t) => new RegExp(`(^|/)${name}$`, "i").test(String(t.id)))?.value ?? null;
+
+const title = meta.common?.title ?? get("title");  // "Hizo • Amina Cyu"
+const url = get("url");                            // "https://open.spotify.com/track/…"
+const date = get("date_recorded");                 // "2026-09-30" (UTC, date only)
 ```
 
 ## Handle missing tags gracefully
