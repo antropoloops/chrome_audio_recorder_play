@@ -7,7 +7,7 @@ La extensión graba fragmentos cortos de audio (hasta 2 minutos) de la pestaña 
 Tab Audio Recorder graba fragmentos cortos de audio (hasta 2 minutos) de la pestaña que tengas abierta en Chrome, pensado para uso educativo y de investigación personal.
 
 Cómo funciona:
-- Abre la pestaña (por ejemplo, un vídeo de YouTube o una canción en Spotify) y pulsa el icono de la extensión para empezar a grabar.
+- Abre la pestaña que quieras grabar y pulsa el icono de la extensión para empezar a grabar.
 - El audio de la pestaña se sigue reproduciendo con normalidad mientras se graba.
 - Al detener la grabación, el archivo WebM se guarda en la carpeta de Descargas, con el título de la página, la URL de origen y la fecha guardados dentro del propio archivo (como metadatos), sin necesidad de archivos adicionales.
 - Las grabaciones se limitan a 2 minutos para mantener el uso dentro de fragmentos cortos.
@@ -24,6 +24,7 @@ Se usa para capturar el audio de la pestaña que el usuario elige grabar de form
 offscreen:
 La grabación con MediaRecorder no puede ejecutarse en el service worker de Manifest V3, así que se usa un documento offscreen oculto para grabar y reproducir el audio capturado, sin abrir ninguna ventana visible.
 
+downloads:
 Se usa para guardar el archivo de audio grabado en la carpeta de Descargas del usuario, dentro de una subcarpeta "_GrabacionesPlay".
 
 activeTab:

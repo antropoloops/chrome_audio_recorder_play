@@ -22,7 +22,7 @@ The title is stored both as the Matroska `Info > Title` element and as the
 | Tag key | Value | Notes |
 |---|---|---|
 | `TITLE` | Cleaned tab title (string) | Also exposed as the normalized `common.title` field by most metadata readers |
-| `URL` | The tab's URL at the moment recording started (string) | Full `https://...` URL. Not guaranteed to be a deep link — e.g. on Spotify, if the user starts a track from the Home feed rather than the track's own page, this will just be `https://open.spotify.com/` |
+| `URL` | The tab's URL at the moment recording started (string) | Full `https://...` URL. Not guaranteed to be a deep link: on single-page apps (players that change what they play without changing the address), this may just be the site's landing URL |
 | `DATE_RECORDED` | Recording date, `YYYY-MM-DD` (UTC) | Date only, no time component |
 
 ## How to read them
@@ -38,7 +38,7 @@ const get = (name) =>
   tags.find((t) => new RegExp(`(^|/)${name}$`, "i").test(String(t.id)))?.value ?? null;
 
 const title = meta.common?.title ?? get("title");  // "Hizo • Amina Cyu"
-const url = get("url");                            // "https://open.spotify.com/track/…"
+const url = get("url");                            // "https://example.com/page"
 const date = get("date_recorded");                 // "2026-09-30" (UTC, date only)
 ```
 

@@ -2,20 +2,10 @@
 export const DOWNLOAD_FOLDER = "_GrabacionesPlay";
 const MEDIA_EXTENSIONS = /\.(mov|mp4|m4v|avi|mkv|wmv|flv|wav|mp3|webm|flac|m4a|ogg)$/i;
 
-export function cleanTitle(title, url) {
-  let cleaned = (title || "").trim();
-  let host = "";
-  try {
-    host = new URL(url).hostname;
-  } catch {
-    // Not a real URL (e.g. a chrome:// page); leave the title as-is.
-  }
+export function cleanTitle(title) {
+  const cleaned = (title || "").trim();
 
-  if (host === "www.youtube.com" || host === "youtube.com" || host === "youtu.be") {
-    cleaned = cleaned.replace(/^\(\d+\)\s*/, "").replace(/\s*-\s*YouTube$/, "");
-  }
-
-  // Some uploaders leave the original filename (extension included) as the
+  // Some sites leave the original filename (extension included) as the page
   // title; that extension has no place in our own filename or tags.
   return cleaned.replace(MEDIA_EXTENSIONS, "");
 }

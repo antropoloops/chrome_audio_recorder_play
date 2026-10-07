@@ -1,6 +1,6 @@
 # Tab Audio Recorder
 
-A Chrome extension that records short audio fragments (up to 2 minutes) from the current browser tab — for example a YouTube video or a Spotify track — for educational and personal research use. It is designed to use by the users of play.antropoloops.
+A Chrome extension that records short audio fragments (up to 2 minutes) from the current browser tab, for educational and personal research use. It is designed to be used by the users of play.antropoloops.
 
 Each recording keeps its source title and page URL **inside the WebM file itself**, as metadata tags, so there's no separate sidecar file to lose track of.
 

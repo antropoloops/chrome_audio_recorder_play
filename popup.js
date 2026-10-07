@@ -2,10 +2,6 @@ const titleEl = document.getElementById("title");
 const statusEl = document.getElementById("status");
 const button = document.getElementById("toggle");
 const errorEl = document.getElementById("error");
-const hintEl = document.getElementById("hint");
-
-const SPOTIFY_HINT =
-  "Si grabas en Spotify, busca la página de la canción hasta que te aparezca aquí el título";
 
 let timerInterval;
 
@@ -27,7 +23,6 @@ async function render() {
 
   const { recording } = await chrome.storage.session.get("recording");
   document.body.classList.toggle("recording", !!recording);
-  hintEl.style.display = "none";
 
   if (recording) {
     titleEl.textContent = recording.title || "(sin título)";
@@ -46,10 +41,6 @@ async function render() {
   titleEl.textContent = tab?.title || "(sin pestaña activa)";
   button.textContent = "Empezar grabación";
   button.onclick = () => startRecording(tab);
-
-  const isSpotify = tab?.url && new URL(tab.url).hostname.endsWith("open.spotify.com");
-  hintEl.textContent = SPOTIFY_HINT;
-  hintEl.style.display = isSpotify ? "block" : "none";
 }
 
 async function startRecording(tab) {
